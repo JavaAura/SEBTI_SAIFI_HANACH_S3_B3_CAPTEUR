@@ -7,7 +7,6 @@ import com.capt.capteurs.repository.MeasurementRepository;
 import com.capt.capteurs.service.MeasurementService;
 import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
-import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;

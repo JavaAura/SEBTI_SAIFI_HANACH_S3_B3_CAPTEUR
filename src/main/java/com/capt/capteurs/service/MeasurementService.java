@@ -8,4 +8,5 @@ public interface MeasurementService {
     MeasurementDTO save(MeasurementDTO measurementDTO);
     List<MeasurementDTO> getMeasurementsByDevice(String deviceId);
     List<MeasurementDTO> getAllMeasurements();
+    byte[] exportMeasurements();
 }

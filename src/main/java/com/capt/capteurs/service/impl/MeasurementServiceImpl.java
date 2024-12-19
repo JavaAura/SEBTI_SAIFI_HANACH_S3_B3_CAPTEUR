@@ -1,17 +1,13 @@
 package com.capt.capteurs.service.impl;
 
 import com.capt.capteurs.dto.MeasurementDTO;
-import com.capt.capteurs.dto.RoleDTO;
 import com.capt.capteurs.mapper.MeasurementMapper;
-import com.capt.capteurs.mapper.RoleMapper;
 import com.capt.capteurs.model.Measurement;
-import com.capt.capteurs.model.Role;
 import com.capt.capteurs.repository.MeasurementRepository;
-import com.capt.capteurs.repository.RoleRepository;
 import com.capt.capteurs.service.MeasurementService;
-import com.capt.capteurs.service.RoleService;
 import org.springframework.stereotype.Service;
 
+import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -29,7 +25,8 @@ public class MeasurementServiceImpl implements MeasurementService {
 
     @Override
     public List<MeasurementDTO> getAllMeasurements() {
-        return measurementRepository.findAll().stream().map(measurementMapper::toResponseDTO).toList();
+        List<Measurement> measurements = measurementRepository.findAll();
+        return measurements.stream().map(measurementMapper::toResponseDTO).toList();
     }
 
     @Override
@@ -46,5 +43,28 @@ public class MeasurementServiceImpl implements MeasurementService {
         measurement.setTimestamp(measurementDTO.getTimestamp() == null ? LocalDateTime.now() : measurementDTO.getTimestamp());
         Measurement savedMeasurement = measurementRepository.save(measurement);
         return measurementMapper.toResponseDTO(savedMeasurement);
+    }
+
+    @Override
+    public byte[] exportMeasurements(){
+        List<Measurement> measurements = measurementRepository.findAll();
+        StringBuilder csvData = new StringBuilder();
+
+        // Ajouter les en-têtes du CSV
+        csvData.append("id,timestamp,value,deviceId\n");
+
+        // Ajouter les données des mesures
+        for (Measurement measurement : measurements) {
+            csvData.append(measurement.getId())
+                    .append(",")
+                    .append(measurement.getTimestamp())
+                    .append(",")
+                    .append(measurement.getValue())
+                    .append(",")
+                    .append(measurement.getDeviceId())
+                    .append("\n");
+        }
+
+        return csvData.toString().getBytes(StandardCharsets.UTF_8);
     }
 }
