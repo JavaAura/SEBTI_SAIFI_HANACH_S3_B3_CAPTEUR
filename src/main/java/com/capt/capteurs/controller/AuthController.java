@@ -39,7 +39,11 @@ public class AuthController {
         );
 
         CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
-        String token = jwtTokenProvider.generateToken(userDetails.getUsername());
+        List<String> roles = userDetails.getAuthorities().stream()
+                .map(authority -> authority.getAuthority())
+                .collect(Collectors.toList());
+
+        String token = jwtTokenProvider.generateToken(userDetails.getUsername(), roles);
 
         return ResponseEntity.ok(new AuthResponse(token, userDetails.getUsername(), userDetails.getAuthorities()));
     }
@@ -48,10 +52,12 @@ public class AuthController {
     public ResponseEntity<AuthResponse> register(@RequestBody UserDTO userDTO) {
         UserDTO registeredUser = userService.register(userDTO);
 
-        String token = jwtTokenProvider.generateToken(registeredUser.getUsername());
+        List<String> roles = registeredUser.getRoles();
 
-        List<SimpleGrantedAuthority> authorities = registeredUser.getRoles().stream()
-                .map(role -> new SimpleGrantedAuthority(role))
+        String token = jwtTokenProvider.generateToken(registeredUser.getUsername(), roles);
+
+        List<SimpleGrantedAuthority> authorities = roles.stream()
+                .map(SimpleGrantedAuthority::new)
                 .collect(Collectors.toList());
 
         return ResponseEntity.ok(new AuthResponse(token, registeredUser.getUsername(), authorities));
