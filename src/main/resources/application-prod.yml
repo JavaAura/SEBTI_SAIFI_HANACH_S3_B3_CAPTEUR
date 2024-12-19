@@ -1,7 +1,7 @@
 spring:
   data:
     mongodb:
-      uri: mongodb://localhost:27017/capteurs_prod
+      uri: mongodb://mongodb:27017/capteurs_prod
 logging:
   level:
     org.springframework.data.mongodb: DEBUG
