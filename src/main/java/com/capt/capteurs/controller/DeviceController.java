@@ -1,7 +1,6 @@
 package com.capt.capteurs.controller;
 import com.capt.capteurs.dto.request.DeviceRequestDTO;
 import com.capt.capteurs.dto.response.DeviceResponseDTO;
-import com.capt.capteurs.dto.response.ZoneResponseDTO;
 import com.capt.capteurs.service.DeviceService;
 import com.capt.capteurs.service.ZoneService;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -3,6 +3,8 @@ package com.capt.capteurs.service.impl;
 
 import com.capt.capteurs.dto.UserDTO;
 import com.capt.capteurs.exception.ResourceNotFoundException;
+import com.capt.capteurs.exception.RoleNotFoundException;
+import com.capt.capteurs.exception.UsernameAlreadyExistsException;
 import com.capt.capteurs.mapper.UserMapper;
 import com.capt.capteurs.model.Role;
 import com.capt.capteurs.model.User;
@@ -33,15 +35,20 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserDTO register(UserDTO userDTO) {
+        if (userRepository.existsByUsername(userDTO.getUsername())) {
+            throw new UsernameAlreadyExistsException("Username '" + userDTO.getUsername() + "' is already taken");
+        }
+
         User user = userMapper.toEntity(userDTO);
         user.setPassword(passwordEncoder.encode(user.getPassword()));
 
         List<Role> roles = userDTO.getRoles().stream()
                 .map(roleName -> roleRepository.findByName(roleName))
+                .filter(role -> role != null)
                 .collect(Collectors.toList());
 
         if (roles.isEmpty()) {
-            roles.add(roleRepository.findByName("USER"));
+            throw new RoleNotFoundException("At least one valid role is required (e.g., ROLE_USER or ROLE_ADMIN)");
         }
 
         user.setRoles(roles);
