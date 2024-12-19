@@ -5,6 +5,9 @@ import com.capt.capteurs.mapper.MeasurementMapper;
 import com.capt.capteurs.model.Measurement;
 import com.capt.capteurs.repository.MeasurementRepository;
 import com.capt.capteurs.service.MeasurementService;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.nio.charset.StandardCharsets;
@@ -24,17 +27,19 @@ public class MeasurementServiceImpl implements MeasurementService {
     }
 
     @Override
-    public List<MeasurementDTO> getAllMeasurements() {
-        List<Measurement> measurements = measurementRepository.findAll();
-        return measurements.stream().map(measurementMapper::toResponseDTO).toList();
+    public Page<MeasurementDTO> getAllMeasurements(Pageable pageable) {
+        Page<Measurement> measurements = measurementRepository.findAll(pageable);
+        return measurements.map(measurementMapper::toResponseDTO);
     }
 
     @Override
-    public List<MeasurementDTO> getMeasurementsByDevice(String deviceId) {
-        List<Measurement> measurements = measurementRepository.findByDeviceId(deviceId);
-        return measurements.stream()
-                .map(measurementMapper::toResponseDTO)
-                .collect(Collectors.toList());
+    public Page<MeasurementDTO> getMeasurementsByDevice(String deviceId , Pageable pageable) {
+        List<Measurement> measurements = measurementRepository.findByDeviceId(deviceId,pageable);
+        return new PageImpl<>(
+                measurements.stream().map(measurementMapper::toResponseDTO).toList(),
+                pageable,
+                measurements.size()
+        );
     }
 
     @Override

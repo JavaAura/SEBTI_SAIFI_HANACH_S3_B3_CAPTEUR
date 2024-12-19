@@ -9,5 +9,5 @@ import java.util.List;
 
 @Repository
 public interface MeasurementRepository extends MongoRepository<Measurement, String> {
-    List<Measurement> findByDeviceId(String deviceId);
+    List<Measurement> findByDeviceId(String deviceId,Pageable pageable);
 }

@@ -1,12 +1,15 @@
 package com.capt.capteurs.service;
 
 import com.capt.capteurs.dto.MeasurementDTO;
-
-import java.util.List;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 public interface MeasurementService {
     MeasurementDTO save(MeasurementDTO measurementDTO);
-    List<MeasurementDTO> getMeasurementsByDevice(String deviceId);
-    List<MeasurementDTO> getAllMeasurements();
+
+    Page<MeasurementDTO> getMeasurementsByDevice(String deviceId, Pageable pageable);
+
+    Page<MeasurementDTO> getAllMeasurements(Pageable pageable);
+
     byte[] exportMeasurements();
 }
