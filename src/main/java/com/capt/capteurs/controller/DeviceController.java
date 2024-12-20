@@ -21,7 +21,7 @@ public class DeviceController {
 
 
 
-    @GetMapping("/user/devices")
+    @GetMapping({"/user/devices", "/admin/devices"})
     @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
     public List<DeviceResponseDTO> getAllDevices(
             @RequestParam(defaultValue = "0") int page,
@@ -30,7 +30,7 @@ public class DeviceController {
     }
 
 
-    @GetMapping("/user/devices/zone/{zoneId}")
+    @GetMapping({"/user/devices/zone/{zoneId}", "/admin/devices/zone/{zoneId}"})
     @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
     public List<DeviceResponseDTO> getDevicesByZone(@PathVariable String zoneId,
                                                     @RequestParam(defaultValue = "0") int page,

@@ -30,7 +30,7 @@ public class ZoneController {
         return ResponseEntity.ok(zones);
     }
 
-    @GetMapping("/user/zones/{id}")
+    @GetMapping({"/user/zones/{id}", "/admin/zones/{id}"})
     @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
     public ResponseEntity<ZoneResponseDTO> getZoneById(@PathVariable String id) {
         log.info("Fetching zone with ID: {}", id);
