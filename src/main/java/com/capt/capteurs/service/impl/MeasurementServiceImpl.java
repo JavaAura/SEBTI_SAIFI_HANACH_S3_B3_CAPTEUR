@@ -4,6 +4,7 @@ import com.capt.capteurs.dto.MeasurementDTO;
 import com.capt.capteurs.mapper.MeasurementMapper;
 import com.capt.capteurs.model.Measurement;
 import com.capt.capteurs.repository.MeasurementRepository;
+import com.capt.capteurs.service.AlertService;
 import com.capt.capteurs.service.MeasurementService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -13,17 +14,18 @@ import org.springframework.stereotype.Service;
 import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 public class MeasurementServiceImpl implements MeasurementService {
 
     private final MeasurementRepository measurementRepository;
     private final MeasurementMapper measurementMapper;
+    private final AlertService  alertService;
 
-    public MeasurementServiceImpl(MeasurementRepository measurementRepository, MeasurementMapper measurementMapper) {
+    public MeasurementServiceImpl(MeasurementRepository measurementRepository, MeasurementMapper measurementMapper , AlertService alertService) {
         this.measurementRepository = measurementRepository;
         this.measurementMapper = measurementMapper;
+        this.alertService = alertService;
     }
 
     @Override
@@ -47,6 +49,11 @@ public class MeasurementServiceImpl implements MeasurementService {
         Measurement measurement = measurementMapper.toEntity(measurementDTO);
         measurement.setTimestamp(measurementDTO.getTimestamp() == null ? LocalDateTime.now() : measurementDTO.getTimestamp());
         Measurement savedMeasurement = measurementRepository.save(measurement);
+
+        String deviceId = measurementDTO.getDeviceId();
+        String deviceType = measurementDTO.getDeviceType();
+        double value = measurementDTO.getValue();
+        alertService.createAlertFromMeasurement(deviceId,value,deviceType);
         return measurementMapper.toResponseDTO(savedMeasurement);
     }
 
