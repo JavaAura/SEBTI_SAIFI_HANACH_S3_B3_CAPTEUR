@@ -1,5 +1,6 @@
 package com.capt.capteurs.dto.response;
 
+import com.capt.capteurs.dto.DeviceDTO;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 import java.util.List;
@@ -20,5 +21,5 @@ public class ZoneResponseDTO {
     @NotNull(message = "Zone location cannot be null")
     private String location;
 
-    private List<String> deviceIds;
+    private List<DeviceDTO> devices;
 }
