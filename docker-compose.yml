@@ -1,0 +1,35 @@
+version: "3.9"
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: capteurs-iot
+    ports:
+      - "8080:8080"
+    environment:
+      SPRING_PROFILES_ACTIVE: prod
+      MONGO_URI: mongodb://mongodb:27017/capteurs_prod
+    depends_on:
+      - mongodb
+    networks:
+      - iot-net
+
+  mongodb:
+    image: mongo:6.0
+    container_name: mongodb
+    ports:
+      - "27017:27017"
+    networks:
+      - iot-net
+    volumes:
+      - mongodb_data:/data/db
+
+
+networks:
+  iot-net:
+    driver: bridge
+
+volumes:
+  mongodb_data:
+    driver: local
