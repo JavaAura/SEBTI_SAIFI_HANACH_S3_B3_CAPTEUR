@@ -23,9 +23,12 @@ public class DeviceController {
 
     @GetMapping("/user/devices")
     @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
-    public List<DeviceResponseDTO> getAllDevices(@RequestParam int page, @RequestParam int size) {
+    public List<DeviceResponseDTO> getAllDevices(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size) {
         return deviceService.getAllDevices(page, size);
     }
+
 
     @GetMapping("/user/devices/zone/{zoneId}")
     @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")

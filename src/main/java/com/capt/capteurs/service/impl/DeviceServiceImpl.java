@@ -4,7 +4,9 @@ import com.capt.capteurs.dto.request.DeviceRequestDTO;
 import com.capt.capteurs.dto.response.DeviceResponseDTO;
 import com.capt.capteurs.mapper.Devicemapper;
 import com.capt.capteurs.model.Device;
+import com.capt.capteurs.model.Zone;
 import com.capt.capteurs.repository.DeviceRepository;
+import com.capt.capteurs.repository.ZoneRepository;
 import com.capt.capteurs.service.DeviceService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -23,6 +25,9 @@ public class DeviceServiceImpl implements DeviceService {
 
     @Autowired
     private Devicemapper devicemapper;
+
+    @Autowired
+    private ZoneRepository zoneRepository;
 
     @Override
     public List<DeviceResponseDTO> getAllDevices(int page, int size) {
@@ -45,6 +50,8 @@ public class DeviceServiceImpl implements DeviceService {
     @Override
     public DeviceResponseDTO addDevice(DeviceRequestDTO deviceRequestDTO) {
         Device device = devicemapper.toDevice(deviceRequestDTO);
+        Zone zone =  zoneRepository.findById(deviceRequestDTO.getZoneId()).get();
+        device.setZone(zone);
         deviceRepository.save(device);
         return devicemapper.toDeviceResponseDTO(device);
     }
