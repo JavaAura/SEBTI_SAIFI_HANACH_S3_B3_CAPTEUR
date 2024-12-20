@@ -28,7 +28,7 @@ public class SecurityConfig {
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
                 .authorizeRequests()
-                .requestMatchers("/api/auth/**","/api/admin/roles").permitAll()
+                .requestMatchers("/api/auth/**","/api/admin/roles","/actuator/health","/actuator/**","/actuator").permitAll()
                 .requestMatchers("/api/admin/**").hasRole("ADMIN")
                 .requestMatchers(HttpMethod.GET, "/api/user/**").hasRole("USER")
                 .requestMatchers(HttpMethod.POST, "/api/user/**").denyAll()
