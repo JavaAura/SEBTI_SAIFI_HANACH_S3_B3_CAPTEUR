@@ -13,4 +13,5 @@ public class MeasurementDTO {
     private LocalDateTime timestamp;
     private double value;
     private String deviceId;
+    private String deviceType;
 }

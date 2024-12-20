@@ -42,6 +42,7 @@ public class MeasurementServiceTest {
         dtoResult.setId("1");
         dtoResult.setValue(25.0);
         dtoResult.setDeviceId("device123");
+        dtoResult.setDeviceType("test");
 
         when(measurementMapper.toEntity(measurementDto)).thenReturn(measurement);
         when(measurementRepository.save(measurement)).thenReturn(measurement);
