@@ -27,9 +27,10 @@ public class ZoneServiceImpl implements ZoneService {
     @Override
     public List<ZoneResponseDTO> getAllZones() {
         log.debug("Retrieving all zones from the database");
-        List<Zone> zones = zoneRepository.findAll();
-        log.debug("Retrieved {} zones", zones.size());
-        return zones.stream().map(zoneMapper::toResponseDTO).collect(Collectors.toList());
+        List<Zone> zones = zoneRepository.findAllZonesWithDevices();
+        return zones.stream()
+                .map(zoneMapper::toResponseDTO)
+                .collect(Collectors.toList());
     }
 
     @Override
