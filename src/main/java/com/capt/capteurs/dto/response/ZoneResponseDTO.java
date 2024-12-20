@@ -2,11 +2,13 @@ package com.capt.capteurs.dto.response;
 
 import com.capt.capteurs.dto.DeviceDTO;
 import jakarta.validation.constraints.NotNull;
+import lombok.Builder;
 import lombok.Data;
 import java.util.List;
 
 
 @Data
+@Builder
 public class ZoneResponseDTO {
 
     @NotNull(message = "Zone ID cannot be null")

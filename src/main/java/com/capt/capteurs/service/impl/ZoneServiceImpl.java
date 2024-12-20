@@ -47,6 +47,9 @@ public class ZoneServiceImpl implements ZoneService {
 
     @Override
     public ZoneResponseDTO addZone(ZoneRequestDTO zoneRequestDTO) {
+        if (zoneRequestDTO.getName() == null || zoneRequestDTO.getName().isEmpty()) {
+            throw new IllegalArgumentException("Zone name is required");
+        }
         log.debug("Mapping ZoneRequestDTO to Zone entity");
         Zone zone = zoneMapper.toEntity(zoneRequestDTO);
         log.debug("Saving zone to the database");
