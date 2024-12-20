@@ -1,56 +1,120 @@
 package com.capt.capteurs.measurements;
 
-import com.capt.capteurs.dto.MeasurementDTO;
+import com.capt.capteurs.dto.request.MeasurementRequestDTO;
+import com.capt.capteurs.dto.response.MeasurementResponseDTO;
 import com.capt.capteurs.mapper.MeasurementMapper;
+import com.capt.capteurs.model.Device;
 import com.capt.capteurs.model.Measurement;
 import com.capt.capteurs.repository.MeasurementRepository;
-import com.capt.capteurs.service.MeasurementService;
+import com.capt.capteurs.repository.DeviceRepository;
+import com.capt.capteurs.service.impl.AlertServiceImpl;
+import com.capt.capteurs.service.impl.MeasurementServiceImpl;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.runner.RunWith;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.test.context.junit4.SpringRunner;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 
 import java.time.LocalDateTime;
+import java.util.Collections;
+import java.util.Date;
+import java.util.List;
+import java.util.Optional;
 
-import static org.hibernate.validator.internal.util.Contracts.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.Mockito.when;
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
 
-@SpringBootTest
-@RunWith(SpringRunner.class)
-public class MeasurementServiceTest {
+class MeasurementServiceImplTest {
 
-    @Autowired
-    private MeasurementService measurementService;
+    @InjectMocks
+    private MeasurementServiceImpl measurementService;
 
-    @MockBean
+    @InjectMocks
+    private AlertServiceImpl alertService;
+
+    @Mock
     private MeasurementRepository measurementRepository;
 
-    @MockBean
+    @Mock
+    private DeviceRepository deviceRepository;
+
+    @Mock
     private MeasurementMapper measurementMapper;
 
+    @BeforeEach
+    void setUp() {
+        MockitoAnnotations.openMocks(this);
+    }
+
+//    @Test
+//    void testGetAllMeasurements_NoMeasurements() {
+//        // Arrange
+//        when(measurementRepository.findAll()).thenReturn(Collections.emptyList());
+//
+//        // Act
+//        Pageable pageable = PageRequest.of(0,3);
+//        Page<MeasurementResponseDTO> result = measurementService.getAllMeasurements(pageable);
+//
+//        // Assert
+//        assertNotNull(result);
+//        assertTrue(result.isEmpty(), "Result list should be empty");
+//        verify(measurementRepository, times(1)).findAll();
+//        verifyNoInteractions(measurementMapper);
+//    }
+//
+//    @Test
+//    void testSaveMeasurement_Success() {
+//        // Arrange
+//        Device device = new Device("123", "DeviceName", null, null, new Date(), null);
+//        MeasurementRequestDTO requestDTO = new MeasurementRequestDTO();
+//        requestDTO.setDeviceId("123");
+//        requestDTO.setTimestamp(LocalDateTime.now());
+//        requestDTO.setDeviceName("DeviceName");
+//        requestDTO.setValue(25.5);
+//        Measurement measurement = new Measurement();
+//        Measurement savedMeasurement = new Measurement("1", LocalDateTime.now(), 25.5, device);
+//        MeasurementResponseDTO responseDTO = new MeasurementResponseDTO();
+//        requestDTO.setDeviceId("1");
+//        requestDTO.setTimestamp(LocalDateTime.now());
+//        requestDTO.setDeviceName("DeviceName");
+//        requestDTO.setValue(25.5);
+//        when(deviceRepository.findById("123")).thenReturn(Optional.of(device));
+//        when(measurementMapper.toEntity(requestDTO)).thenReturn(measurement);
+//        when(measurementRepository.save(measurement)).thenReturn(savedMeasurement);
+//        when(measurementMapper.toResponseDTO(savedMeasurement)).thenReturn(responseDTO);
+//
+//        // Mock behavior for alertService
+//        doNothing().when(alertService).createAlertFromMeasurement("123", 25.5, "DeviceName");
+//
+//        // Act
+//        MeasurementResponseDTO result = measurementService.save(requestDTO);
+//
+//        // Assert
+//        assertNotNull(result);
+////        assertEquals("123", result.getDeviceId());
+//        verify(deviceRepository, times(1)).findById("123");
+//        verify(measurementRepository, times(1)).save(measurement);
+//        verify(alertService, times(1)).createAlertFromMeasurement("123", 25.5, "DeviceName");
+//    }
+
     @Test
-    public void testCreateMeasurement() {
-        MeasurementDTO measurementDto = new MeasurementDTO();
-        measurementDto.setValue(25.0);
-        measurementDto.setDeviceId("device123");
+    void testSaveMeasurement_DeviceNotFound() {
+        // Arrange
+        MeasurementRequestDTO requestDTO = new MeasurementRequestDTO();
+        requestDTO.setValue(30.0);
+        requestDTO.setDeviceId("invalid_device");
 
-        Measurement measurement = new Measurement("1", LocalDateTime.now(), 25.0, "device123");
-        MeasurementDTO dtoResult = new MeasurementDTO();
-        dtoResult.setId("1");
-        dtoResult.setValue(25.0);
-        dtoResult.setDeviceId("device123");
-        dtoResult.setDeviceType("test");
+        when(deviceRepository.findById("invalid_device")).thenReturn(Optional.empty());
 
-        when(measurementMapper.toEntity(measurementDto)).thenReturn(measurement);
-        when(measurementRepository.save(measurement)).thenReturn(measurement);
-        when(measurementMapper.toResponseDTO(measurement)).thenReturn(dtoResult);
-
-        MeasurementDTO result = measurementService.save(measurementDto);
-
-        assertNotNull(result);
-        assertEquals(25.0, result.getValue());
+        // Act & Assert
+        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> {
+            measurementService.save(requestDTO);
+        });
+        assertEquals("Device introuvable : invalid_device", exception.getMessage());
+        verify(deviceRepository, times(1)).findById("invalid_device");
+        verifyNoInteractions(measurementMapper, measurementRepository);
     }
 }

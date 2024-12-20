@@ -1,14 +1,17 @@
 package com.capt.capteurs.mapper;
 
-import com.capt.capteurs.dto.MeasurementDTO;
-import com.capt.capteurs.dto.RoleDTO;
+import com.capt.capteurs.dto.request.MeasurementRequestDTO;
+import com.capt.capteurs.dto.response.MeasurementResponseDTO;
 import com.capt.capteurs.model.Measurement;
-import com.capt.capteurs.model.Role;
 import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
 
 @Mapper(componentModel = "spring")
 public interface MeasurementMapper {
-    Measurement toEntity(MeasurementDTO measurementDTO);
+    @Mapping(source = "deviceId.id", target = "deviceId")
+    @Mapping(source = "deviceId.name", target = "deviceName")
+    MeasurementResponseDTO toResponseDTO(Measurement measurement);
 
-    MeasurementDTO toResponseDTO(Measurement measurement);
+    @Mapping(source = "deviceId", target = "deviceId.id")
+    Measurement toEntity(MeasurementRequestDTO measurementRequestDTO);
 }

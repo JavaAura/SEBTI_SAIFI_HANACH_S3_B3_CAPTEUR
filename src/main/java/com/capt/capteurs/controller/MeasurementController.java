@@ -1,6 +1,7 @@
 package com.capt.capteurs.controller;
 
-import com.capt.capteurs.dto.MeasurementDTO;
+import com.capt.capteurs.dto.request.MeasurementRequestDTO;
+import com.capt.capteurs.dto.response.MeasurementResponseDTO;
 import com.capt.capteurs.service.MeasurementService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -10,8 +11,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RestController
 @RequestMapping("/api/measurements")
@@ -24,28 +23,28 @@ public class MeasurementController {
 
     @PostMapping
     @PreAuthorize("hasRole('ADMIN') or hasRole('USER')")
-    public ResponseEntity<MeasurementDTO> addMeasurement(@RequestBody MeasurementDTO measurement) {
-        MeasurementDTO createdMeasurement = measurementService.save(measurement);
+    public ResponseEntity<MeasurementResponseDTO> addMeasurement(@RequestBody MeasurementRequestDTO measurement) {
+        MeasurementResponseDTO createdMeasurement = measurementService.save(measurement);
         return new ResponseEntity<>(createdMeasurement, HttpStatus.CREATED);
     }
 
     @GetMapping
     @PreAuthorize("hasRole('ADMIN') or hasRole('USER')")
-    public ResponseEntity<Page<MeasurementDTO>> getAllMeasurements(
+    public ResponseEntity<Page<MeasurementResponseDTO>> getAllMeasurements(
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size) {
         Pageable pageable = PageRequest.of(page, size);
-        Page<MeasurementDTO> measurements = measurementService.getAllMeasurements(pageable);
+        Page<MeasurementResponseDTO> measurements = measurementService.getAllMeasurements(pageable);
         return ResponseEntity.ok(measurements);
     }
 
     @GetMapping("/device/{deviceId}")
     @PreAuthorize("hasRole('ADMIN') or hasRole('USER')")
-    public ResponseEntity<Page<MeasurementDTO>> getMeasurementsByDevice(@PathVariable String deviceId,
+    public ResponseEntity<Page<MeasurementResponseDTO>> getMeasurementsByDevice(@PathVariable String deviceId,
                                                                         @RequestParam(defaultValue = "0") int page,
                                                                         @RequestParam(defaultValue = "10") int size) {
         Pageable pageable = PageRequest.of(page, size);
-        Page<MeasurementDTO> measurements = measurementService.getMeasurementsByDevice(deviceId,pageable);
+        Page<MeasurementResponseDTO> measurements = measurementService.getMeasurementsByDevice(deviceId,pageable);
         return ResponseEntity.ok(measurements);
     }
 

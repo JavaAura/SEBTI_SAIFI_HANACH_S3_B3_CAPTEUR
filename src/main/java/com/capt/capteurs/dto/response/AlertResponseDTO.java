@@ -11,4 +11,5 @@ public class AlertResponseDTO {
     private String message;
     private LocalDateTime timestamp;
     private String deviceId;
+    private String deviceName;
 }
