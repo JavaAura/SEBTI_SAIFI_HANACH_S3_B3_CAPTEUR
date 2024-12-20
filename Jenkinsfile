@@ -1,5 +1,5 @@
-pipeline {
-    agent any
+    pipeline {
+        agent any
 
     stages {
         stage('Checkout') {
@@ -47,24 +47,24 @@ pipeline {
         }
 
 
-        stage('Deploy') {
-                    steps {
-                        sh 'docker-compose down && docker-compose up -d'
-                    }
+            stage('Deploy') {
+                        steps {
+                            sh 'docker-compose down && docker-compose up -d'
+                        }
+            }
+
         }
 
+        post {
+            always {
+                echo 'Cleaning up Docker resources...'
+                sh 'docker system prune -f || true' // Ensure it doesn't fail the pipeline
+            }
+            success {
+                        echo 'Pipeline exécuté avec succès !'
+            }
+            failure {
+                        echo 'Pipeline échoué.'
+            }
+        }
     }
-
-    post {
-        always {
-            echo 'Cleaning up Docker resources...'
-            sh 'docker system prune -f || true' // Ensure it doesn't fail the pipeline
-        }
-        success {
-                    echo 'Pipeline exécuté avec succès !'
-        }
-        failure {
-                    echo 'Pipeline échoué.'
-        }
-    }
-}

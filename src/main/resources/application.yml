@@ -7,3 +7,13 @@ spring:
 logging:
   level:
     org.springframework: DEBUG
+    org.springframework.boot.actuate: DEBUG
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+  health:
+    details:
+      show-details: always
