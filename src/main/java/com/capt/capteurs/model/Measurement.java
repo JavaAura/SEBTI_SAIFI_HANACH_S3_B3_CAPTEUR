@@ -1,6 +1,7 @@
 package com.capt.capteurs.model;
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.Id;
@@ -12,7 +13,7 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
-
+@Builder
 @Document(collection = "measurments")
 public class Measurement {
     @Id

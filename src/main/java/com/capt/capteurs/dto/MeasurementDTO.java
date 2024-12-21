@@ -1,5 +1,6 @@
 package com.capt.capteurs.dto;
 
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
@@ -7,7 +8,8 @@ import lombok.RequiredArgsConstructor;
 import java.time.LocalDateTime;
 
 @Data
-@RequiredArgsConstructor
+@Builder
+@AllArgsConstructor
 public class MeasurementDTO {
     private String id;
     private LocalDateTime timestamp;
