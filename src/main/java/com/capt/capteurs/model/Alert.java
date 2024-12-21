@@ -2,6 +2,7 @@ package com.capt.capteurs.model;
 
 import lombok.Data;
 import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.time.LocalDateTime;
@@ -14,5 +15,7 @@ public class Alert {
     private String severity;
     private String message;
     private LocalDateTime timestamp;
-    private String deviceId;
+
+    @DBRef
+    private Device deviceId;
 }

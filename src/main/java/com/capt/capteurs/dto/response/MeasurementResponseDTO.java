@@ -1,15 +1,16 @@
 package com.capt.capteurs.dto.response;
 
 import lombok.Data;
+import lombok.RequiredArgsConstructor;
 
 import java.time.LocalDateTime;
 
 @Data
-public class AlertResponseDTO {
+@RequiredArgsConstructor
+public class MeasurementResponseDTO {
     private String id;
-    private String severity;
-    private String message;
     private LocalDateTime timestamp;
+    private double value;
     private String deviceId;
     private String deviceName;
 }

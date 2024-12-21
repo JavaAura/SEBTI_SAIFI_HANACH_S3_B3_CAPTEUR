@@ -1,10 +1,7 @@
 package com.capt.capteurs.dto.request;
 
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.Size;
 import lombok.Data;
-import org.springframework.data.mongodb.core.mapping.DocumentReference;
-
 import java.time.LocalDateTime;
 
 

@@ -21,5 +21,5 @@ public class Measurement {
     private LocalDateTime timestamp;
     private double value;
     @DBRef
-    private String deviceId;
+    private Device deviceId;
 }

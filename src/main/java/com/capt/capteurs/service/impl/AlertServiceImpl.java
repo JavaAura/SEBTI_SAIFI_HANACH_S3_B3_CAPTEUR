@@ -3,7 +3,9 @@ package com.capt.capteurs.service.impl;
 import com.capt.capteurs.dto.response.AlertResponseDTO;
 import com.capt.capteurs.mapper.AlertMapper;
 import com.capt.capteurs.model.Alert;
+import com.capt.capteurs.model.Device;
 import com.capt.capteurs.repository.AlertRepository;
+import com.capt.capteurs.repository.DeviceRepository;
 import com.capt.capteurs.service.AlertService;
 import org.springframework.stereotype.Service;
 
@@ -15,10 +17,12 @@ import java.util.stream.Collectors;
 public class AlertServiceImpl implements AlertService {
 
     private final AlertRepository alertRepository;
+    private final DeviceRepository deviceRepository;
     private final AlertMapper alertMapper;
 
-    public AlertServiceImpl(AlertRepository alertRepository, AlertMapper alertMapper) {
+    public AlertServiceImpl(AlertRepository alertRepository, DeviceRepository deviceRepository ,AlertMapper alertMapper) {
         this.alertRepository = alertRepository;
+        this.deviceRepository = deviceRepository;
         this.alertMapper = alertMapper;
     }
 
@@ -89,8 +93,12 @@ public class AlertServiceImpl implements AlertService {
             throw new IllegalArgumentException("Type d'appareil non supporté : " + deviceType);
         }
 
+        Device device = deviceRepository.findById(deviceId)
+            .orElseThrow(() -> new IllegalArgumentException("Device introuvable : " + deviceId));
+
+
         Alert alert = new Alert();
-        alert.setDeviceId(deviceId);
+        alert.setDeviceId(device);
         alert.setSeverity(severity);
         alert.setMessage(message);
         alert.setTimestamp(LocalDateTime.now());

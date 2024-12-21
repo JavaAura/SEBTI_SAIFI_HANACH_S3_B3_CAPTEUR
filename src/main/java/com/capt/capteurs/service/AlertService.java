@@ -1,8 +1,5 @@
 package com.capt.capteurs.service;
 
-
-
-import com.capt.capteurs.dto.request.AlertRequestDTO;
 import com.capt.capteurs.dto.response.AlertResponseDTO;
 
 import java.util.List;
